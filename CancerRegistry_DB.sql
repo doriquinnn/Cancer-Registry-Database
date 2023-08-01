@@ -145,3 +145,18 @@ VALUES (1, 'Level IV', 4.2, 'Present'),
        (5, 'Level II', 1.4, 'Absent');
 
  SELECT * FROM Synoptic_Melanoma;
+
+ -- ------------------------------------------------------------------------------------------------
+ -- Create a view that combines multiple tables using joins
+ -- The view called Report Data combines data from four base tables: Report, Report_Notification, Patient_Notification, and Stage. 
+ -- A view like this could be useful for researchers because it excludes identifying data like the patient’s name dob and sex 
+CREATE VIEW vw_ReportData AS
+SELECT R.Report_id, R.Laboratory_Number, R.Report_Type, R.Date_of_Diagnosis, PN.Basis_of_Notification, PN.Histological_Type, S.T_stage, S.N_stage
+FROM
+    Report R
+JOIN Report_Notification RN ON R.Report_id = RN.Report_id
+JOIN Patient_Notification PN ON RN.Patient_Notification_id = PN.Patient_Notification_id
+JOIN Stage S ON RN.Report_Notification_id = S.Report_Notification_id;
+
+SELECT * FROM vw_ReportData;
+
