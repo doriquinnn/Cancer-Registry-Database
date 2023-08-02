@@ -160,3 +160,22 @@ JOIN Stage S ON RN.Report_Notification_id = S.Report_Notification_id;
 
 SELECT * FROM vw_ReportData;
 
+-- -------------------------------------------------------------------------------------------------
+-- Create a stored function that can be applied to a query in your DB
+-- This function calculates the age of a patient based on their Birth_Date using the TIMESTAMPDIFF function, and it returns the calculated age as an integer. 
+-- The function is deterministic, meaning it will always produce the same output for the same input
+DELIMITER //
+CREATE FUNCTION GetPatientAge(patientId INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+  DECLARE age INT;
+  SELECT TIMESTAMPDIFF(YEAR, Birth_Date, CURDATE()) INTO age
+  FROM Patient
+  WHERE Patient_id = patientId;
+  RETURN age;
+END //
+DELIMITER ;
+
+SELECT Patient_id, First_Name, Last_Name, GetPatientAge(Patient_id) AS Age
+FROM Patient;
