@@ -211,3 +211,5 @@ DELIMITER ;
 
 -- Call the stored procedure
 CALL GetPatientReports(1);
+
+-- ----------
