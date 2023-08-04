@@ -179,3 +179,21 @@ DELIMITER ;
 
 SELECT Patient_id, First_Name, Last_Name, GetPatientAge(Patient_id) AS Age
 FROM Patient;
+
+-- ---------------------------------------------------------------------------------------------------------------
+-- Prepare an example query with a subquery to demonstrate how to extract data from your DB for analysis
+-- The subquery calculates the count of records in the Synoptic table for each report notification.
+SELECT
+    R.Report_id,
+    R.Date_of_Diagnosis,
+    PN.Basis_of_Notification,
+    PN.Histological_Type,
+    (
+        SELECT COUNT(*)
+        FROM Synoptic
+        WHERE Report_Notification_id = RN.Report_Notification_id
+    ) AS Synoptic_Count
+FROM
+    Report R
+    JOIN Report_Notification RN ON R.Report_id = RN.Report_id
+    JOIN Patient_Notification PN ON RN.Patient_Notification_id = PN.Patient_Notification_id;
