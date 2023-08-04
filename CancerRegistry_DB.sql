@@ -197,3 +197,17 @@ FROM
     Report R
     JOIN Report_Notification RN ON R.Report_id = RN.Report_id
     JOIN Patient_Notification PN ON RN.Patient_Notification_id = PN.Patient_Notification_id;
+ 
+ -- ----------------------------------------------------------------------------------------------------------
+-- Create a stored procedure and demonstrate how it runs 
+DELIMITER //
+CREATE PROCEDURE GetPatientReports(IN patientId INT)
+BEGIN
+  SELECT *
+  FROM Report
+  WHERE Patient_id = patientId;
+END //
+DELIMITER ;
+
+-- Call the stored procedure
+CALL GetPatientReports(1);
