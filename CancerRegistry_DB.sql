@@ -212,4 +212,26 @@ DELIMITER ;
 -- Call the stored procedure
 CALL GetPatientReports(1);
 
--- ----------
+-- ---------------------------------------------------------------------------------------------------------
+
+-- In your database, create a trigger and demonstrate how it runs
+DELIMITER //
+
+CREATE TRIGGER Patient_Insert_Trigger
+AFTER INSERT
+ON Patient FOR EACH ROW
+BEGIN
+  -- Insert a new row into Patient_Notification
+  INSERT INTO Patient_Notification (Basis_of_Notification, Histological_Type, Histological_Grade, Primary_Site, Laterality, Date_of_Diagnosis)
+  VALUES ('N/A', 'N/A', 'N/A', 'N/A', 'N/A', NOW());
+END;
+//
+
+DELIMITER ;
+
+
+INSERT INTO Patient (Patient_id, First_Name, Last_Name, Birth_Date, Sex)
+VALUES (6, 'Sarah', 'Johnson', '1990-12-08', 'F');
+
+SELECT * FROM Patient_Notification;
+-- drop trigger Patient_Insert_Trigger;
