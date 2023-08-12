@@ -235,3 +235,42 @@ VALUES (6, 'Sarah', 'Johnson', '1990-12-08', 'F');
 
 SELECT * FROM Patient_Notification;
 -- drop trigger Patient_Insert_Trigger;
+
+-- --------------------------------------------------------------------------------------
+--  In your database, create an event and demonstrate how it runs
+
+SET GLOBAL event_scheduler = ON;
+-- Create the event to add a new random report row every minute
+DELIMITER //
+
+CREATE EVENT AddNewReportEvent
+ON SCHEDULE EVERY 1 MINUTE STARTS CURRENT_TIMESTAMP
+DO
+BEGIN
+  DECLARE new_patient_id INT;
+  DECLARE new_lab_number VARCHAR(50);
+  DECLARE new_hospital_code VARCHAR(50);
+  DECLARE new_urn VARCHAR(50);
+  DECLARE new_report_type VARCHAR(50);
+  DECLARE new_diagnosis_date DATE;
+  DECLARE new_requesting_doctor VARCHAR(100);
+
+  SET new_patient_id = FLOOR(RAND() * 5) + 1; -- Assuming there are 5 patients with IDs 1 to 5
+  SET new_lab_number = CONCAT('LAB', FLOOR(RAND() * 1000));
+  SET new_hospital_code = CONCAT('HOSP', FLOOR(RAND() * 1000));
+  SET new_urn = CONCAT('URN', FLOOR(RAND() * 1000));
+  SET new_report_type = IF(RAND() > 0.5, 'Diagnostic', 'Follow-up');
+  SET new_diagnosis_date = DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 365) DAY); -- Random date within the last year
+  SET new_requesting_doctor = CONCAT('Doctor', FLOOR(RAND() * 100));
+
+  INSERT INTO Report (Patient_id, Laboratory_Number, Hospital_Code, Urn, Report_Type, Date_of_Diagnosis, Requesting_Doctor)
+  VALUES (new_patient_id, new_lab_number, new_hospital_code, new_urn, new_report_type, new_diagnosis_date, new_requesting_doctor);
+END;
+//
+
+DELIMITER ;
+
+
+SELECT * FROM Report;
+
+-- DROP EVENT AddNewReportEvent ;
