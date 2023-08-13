@@ -274,3 +274,23 @@ DELIMITER ;
 SELECT * FROM Report;
 
 -- DROP EVENT AddNewReportEvent ;
+
+-- -------------------------------------------------------------------------------------------------------------------------------------------
+-- Create a view that uses at least 3-4 base tables; prepare and demonstrate a query that uses
+-- the view to produce a logically arranged result set for analysis.
+CREATE VIEW vw_DatabaseView AS
+SELECT
+  P.Patient_id, P.Birth_Date, P.Sex,
+  R.Report_id, R.Laboratory_Number, R.Hospital_Code, R.Report_Type, R.Date_of_Diagnosis,
+  S.Tumour_size, S.Total_Nodes, S.Positive_Nodes
+FROM Patient P
+JOIN Report R ON P.Patient_id = R.Patient_id
+JOIN Synoptic S ON R.Report_id = S.Report_Notification_id;
+
+SELECT
+  Patient_id, Date_of_Diagnosis, Tumour_size, Total_Nodes, Positive_Nodes
+FROM vw_DatabaseView
+WHERE Date_of_Diagnosis BETWEEN '2022-01-01' AND '2022-03-31'
+ORDER BY Date_of_Diagnosis;
+
+-- DROP VIEW vw_DatabaseView;
