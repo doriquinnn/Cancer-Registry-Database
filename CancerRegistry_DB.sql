@@ -294,3 +294,15 @@ WHERE Date_of_Diagnosis BETWEEN '2022-01-01' AND '2022-03-31'
 ORDER BY Date_of_Diagnosis;
 
 -- DROP VIEW vw_DatabaseView;
+
+
+-- --------------------------------------------------------------------------------------------------------------------------
+-- Prepare an example query with group by and having to demonstrate how to extract data from your DB for analysis
+SELECT
+  P.Sex,
+  AVG(S.Tumour_size) AS Average_Tumor_Size
+FROM vw_DatabaseView DBV
+JOIN Patient P ON DBV.Patient_id = P.Patient_id
+JOIN Synoptic S ON DBV.Report_id = S.Report_Notification_id
+GROUP BY P.Sex
+HAVING AVG(S.Tumour_size) > 1.5;
